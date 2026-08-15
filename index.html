@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopEasy | Thiranex Capstone</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body { background: #f5f5f5; }
+    nav { background: #2563eb; color: white; padding: 1rem 2rem; display: flex; justify-content: space-between; }
+    nav a { color: white; text-decoration: none; margin: 0 10px; cursor: pointer; }
+    .container { max-width: 1200px; margin: 2rem auto; padding: 1rem; }
+    .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+    .card { background: white; padding: 1rem; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+    .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+    button { background: #2563eb; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+    .page { display: none; }
+    .page.active { display: block; }
+</style>
+</head>
+<body>
+
+<nav>
+    <h2>ShopEasy</h2>
+    <div>
+        <!-- 2. CLIENT-SIDE ROUTING -->
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('products')">Products</a>
+        <a onclick="showPage('cart')">Cart (<span id="cartCount">0</span>)</a>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- PAGE 1: HOME -->
+    <div id="home" class="page active">
+        <h1>Welcome to ShopEasy 🛒</h1>
+        <p>Your one-stop shop for everything. Task 5 Capstone Project.</p>
+    </div>
+
+    <!-- PAGE 2: PRODUCTS -->
+    <div id="products" class="page">
+        <h1>Products</h1>
+        <div class="products" id="productList"></div>
+    </div>
+
+    <!-- PAGE 3: CART -->
+    <div id="cart" class="page">
+        <h1>Your Cart</h1>
+        <div id="cartItems"></div>
+    </div>
+</div>
+
+<script>
+    // 1. MODULAR DATA
+    const products = [
+        { id: 1, name: "Laptop", price: 50000, img: "https://via.placeholder.com/250" },
+        { id: 2, name: "Headphones", price: 2000, img: "https://via.placeholder.com/250" },
+        { id: 3, name: "Mobile", price: 25000, img: "https://via.placeholder.com/250" }
+    ];
+    let cart = [];
+
+    // 2. CLIENT-SIDE ROUTING FUNCTION
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if(pageId === 'products') loadProducts();
+        if(pageId === 'cart') loadCart();
+    }
+
+    // Load Products
+    function loadProducts() {
+        const list = document.getElementById('productList');
+        list.innerHTML = '';
+        products.forEach(p => {
+            list.innerHTML += `
+                <div class="card">
+                    <!-- 3. OPTIMIZE: use placeholder/compressed images -->
+                    <img src="${p.img}" alt="${p.name} product image">
+                    <h3>${p.name}</h3>
+                    <p>₹${p.price}</p>
+                    <button onclick="addToCart(${p.id})">Add to Cart</button>
+                </div>
+            `;
+        });
+    }
+
+    function addToCart(id) {
+        cart.push(products.find(p => p.id === id));
+        document.getElementById('cartCount').innerText = cart.length;
+        alert("Added to cart!");
+    }
+
+    function loadCart() {
+        const cartDiv = document.getElementById('cartItems');
+        if(cart.length === 0) {
+            cartDiv.innerHTML = "<p>Cart is empty</p>";
+            return;
+        }
+        cartDiv.innerHTML = cart.map(item => `<p>${item.name} - ₹${item.price}</p>`).join('');
+    }
+</script>
+</body>
+</html>
